@@ -1,0 +1,89 @@
+﻿   Qt/MSBuild: 3.5.0.0
+   Qt: 6.10.3
+  ProjektRPGmaker.cpp
+  Zarzadca.cpp
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x3901, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x3930, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x39d7, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x39df, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x3aa6, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x3ab5, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x3ab8, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x3ac1, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x3b9c, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x3bb9, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x3bcd, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x3bcf, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x3d28, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x3d2d, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x3d75, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x3d76, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x3d7c, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x3e63, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x3e7c, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x4012, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ProjektRPGmaker.cpp(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x41c6, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\Kafelek.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x6aa, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „Zarzadca.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\Kafelek.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x6bf, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „Zarzadca.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\Kafelek.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x6c9, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „Zarzadca.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\Kafelek.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x71e, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „Zarzadca.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\Kafelek.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x737, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „Zarzadca.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\Kafelek.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x748, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „Zarzadca.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\Kafelek.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x6aa, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „ProjektRPGmaker.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\Kafelek.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x6bf, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „ProjektRPGmaker.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\Kafelek.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x6c9, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „ProjektRPGmaker.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\Kafelek.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x71e, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „ProjektRPGmaker.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\Kafelek.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x737, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „ProjektRPGmaker.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\Kafelek.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x748, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „ProjektRPGmaker.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\WczytajProjektDialog.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x13ef, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „ProjektRPGmaker.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\WczytajProjektDialog.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x13f3, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „ProjektRPGmaker.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\WczytajProjektDialog.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x13f5, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „ProjektRPGmaker.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ZapiszProjektDialog.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x1329, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „ProjektRPGmaker.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ZapiszProjektDialog.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x132d, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „ProjektRPGmaker.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\ZapiszProjektDialog.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x1335, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „ProjektRPGmaker.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\StatystykiDialog.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x151f, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „ProjektRPGmaker.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\StatystykiDialog.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x1523, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „ProjektRPGmaker.cpp”)
+  
+C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\StatystykiDialog.h(1,1): warning C4828: Plik zawiera znak rozpoczynający się od przesunięcia 0x152b, który jest niedozwolony w bieżącym zestawie znaków źródła (strona kodowa 65001).
+  (kompilowanie pliku źródłowego „ProjektRPGmaker.cpp”)
+  
+  ProjektRPGmakerr.vcxproj -> C:\Users\wermi\source\repos\PK4\ProjektRPGmakerr\x64\Debug\ProjektRPGmakerr.exe

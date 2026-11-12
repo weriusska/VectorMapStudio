@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>css/tlo-podprogramy.png</file>
+        <file>css/pixel.ttf</file>
+        <file>css/tlo.png</file>
+        <file>sprites/drzwi.png</file>
+        <file>sprites/drzwi-otwarte.png</file>
+        <file>sprites/sciana.png</file>
+        <file>sprites/sciezka-good.png</file>
+        <file>sprites/trawa.png</file>
+        <file>sprites/woda.png</file>
+        <file>sprites/ziemia.png</file>
+    </qresource>
+</RCC>
