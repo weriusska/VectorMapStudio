@@ -1,3 +1,4 @@
+#include "Zarzadca.h"
 #include "SystemZapisu.h"
 
 void ZarzadcaMapy::petlaAutozapisu() {
@@ -8,17 +9,16 @@ void ZarzadcaMapy::petlaAutozapisu() {
         }
 
         std::string nazwaZapasowa = aktualnaNazwaMapy;
-        std::string sufiks = "_Autosave";
+        const std::string sufiks = "_Autosave";
 
-        if(!nazwaZapasowa.ends_with(sufiks)) {
+        if (!nazwaZapasowa.ends_with(sufiks)) {
             nazwaZapasowa += sufiks;
         }
 
         {
             std::lock_guard<std::mutex> lock(mutexSiatki);
             SystemZapisu::zapiszDoPliku(nazwaZapasowa, szerokosc, wysokosc, siatka);
-        } 
-        qDebug() << ">>> WATEK W TLE: Zapisano plik:" << QString::fromStdString(nazwaZapasowa) << ".txt";
+        }
 
         if (akcjaPoAutozapisie != nullptr) {
             akcjaPoAutozapisie();

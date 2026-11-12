@@ -1,131 +1,120 @@
 #pragma once
+#include <fstream>
 #include <vector>
 #include <memory>
-#include <QFileDialog> 
-#include <QMessageBox> 
+#include <string>
+#include <regex>
+#include <filesystem>
+#include <stdexcept>
 #include "Kafelek.h"
+#include "Zarzadca.h"
 
-#include <thread>
-#include <atomic>
-#include <chrono>
-#include <mutex>
-#include <ranges>
-#include <functional>
+namespace fs = std::filesystem;
 
-enum class TypPedzla { Trawa, Sciana, Woda, Ziemia, Chodnik, Drzwi };
-
-class ZarzadcaMapy {
-private:
-    int szerokosc = 0;
-    int wysokosc = 0;
-    std::vector<std::vector<std::unique_ptr<ObiektMapy>>> siatka;
-    std::string aktualnaNazwaMapy = "BrakNazwy";
-    TypPedzla aktualnyPedzel = TypPedzla::Sciana;
-
-    std::atomic<bool> dzialaAutozapis{ false };
-    std::thread watekAutozapisu;
-    mutable std::mutex mutexSiatki;
-
-    std::function<void()> akcjaPoAutozapisie = nullptr;
-    void petlaAutozapisu();
-
+class SystemZapisu {
 public:
-    ZarzadcaMapy() = default;
+    static bool zapiszDoPliku(
+        const std::string& nazwaMapy,
+        int szerokosc,
+        int wysokosc,
+        const std::vector<std::unique_ptr<ObiektMapy>>& siatka)
+    {
+        fs::path folderGlowny = "ZapisaneMapy";
 
-    ZarzadcaMapy(int s, int w) : szerokosc(s), wysokosc(w) {
-        dzialaAutozapis = true;
-        siatka.resize(szerokosc);
-        for (int x = 0; x < szerokosc; ++x) {
-            siatka[x].resize(wysokosc);
-            for (int y = 0; y < wysokosc; ++y) {
-                siatka[x][y] = std::make_unique<Trawa>();
+        if (!fs::exists(folderGlowny)) {
+            fs::create_directory(folderGlowny);
+        }
+
+        fs::path pelnaSciezka = folderGlowny / (nazwaMapy + ".txt");
+        std::ofstream plik(pelnaSciezka);
+
+        if (!plik.is_open()) {
+            return false;
+        }
+
+        plik << "Nazwa_Mapy: " << nazwaMapy << "\n";
+        plik << "Wymiary: " << szerokosc << " " << wysokosc << "\n";
+
+        for (int y = 0; y < wysokosc; ++y) {
+            for (int x = 0; x < szerokosc; ++x) {
+                size_t idx = static_cast<size_t>(y) * static_cast<size_t>(szerokosc) + static_cast<size_t>(x);
+                if (idx < siatka.size() && siatka[idx] != nullptr) {
+                    plik << siatka[idx]->pobierzSymbol();
+                }
+                else {
+                    plik << '.';
+                }
+            }
+            plik << "\n";
+        }
+
+        return true;
+    }
+
+    static bool wczytajZPliku(const std::string& sciezkaDoPliku, ZarzadcaMapy& silnik) {
+        std::ifstream plik(sciezkaDoPliku);
+        if (!plik.is_open()) return false;
+
+        std::string linia;
+
+        if (!std::getline(plik, linia)) return false;
+        if (!std::getline(plik, linia)) return false;
+
+        std::regex wzorWymiarow(R"(Wymiary:\s*(\d+)\s+(\d+))");
+        std::smatch dopasowanie;
+
+        int szer = 0, wys = 0;
+        if (std::regex_search(linia, dopasowanie, wzorWymiarow)) {
+            try {
+                szer = std::stoi(dopasowanie[1].str());
+                wys = std::stoi(dopasowanie[2].str());
+            }
+            catch (const std::exception&) {
+                return false;
             }
         }
-        watekAutozapisu = std::thread(&ZarzadcaMapy::petlaAutozapisu, this);
-    }
-
-    ~ZarzadcaMapy() {
-        dzialaAutozapis = false;
-        if (watekAutozapisu.joinable()) {
-            watekAutozapisu.join();
+        else {
+            return false;
         }
-    }
 
-    ZarzadcaMapy(const ZarzadcaMapy&) = delete;
-    ZarzadcaMapy& operator=(const ZarzadcaMapy&) = delete;
-
-    ZarzadcaMapy(ZarzadcaMapy&&) noexcept = default;
-    ZarzadcaMapy& operator=(ZarzadcaMapy&&) noexcept = default;
-
-    void ustawAkcjePoAutozapisie(std::function<void()> akcja) { akcjaPoAutozapisie = akcja; }
-    void ustawNazweMapy(const std::string& nowaNazwa) { aktualnaNazwaMapy = nowaNazwa; }
-    std::string pobierzNazweMapy() const { return aktualnaNazwaMapy; }
-
-    int pobierzSzerokosc() const { return szerokosc; }
-    int pobierzWysokosc() const { return wysokosc; }
-
-    void postawObiekt(int x, int y, std::unique_ptr<ObiektMapy> nowyObiekt) {
-        std::lock_guard<std::mutex> lock(mutexSiatki);
-        if (x >= 0 && x < szerokosc && y >= 0 && y < wysokosc) {
-            siatka[x][y] = std::move(nowyObiekt);
+        if (wys < 10 || wys > 200 || szer < 10 || szer > 200) {
+            return false;
         }
-    }
 
-    char pobierzSymbolZMapy(int x, int y) const {
-        if (x >= 0 && x < szerokosc && y >= 0 && y < wysokosc) {
-            if (siatka[x][y] != nullptr) { 
-                return siatka[x][y]->pobierzSymbol();
+        silnik.zmienRozmiar(szer, wys);
+
+        std::string regula = "^[.#~,=Dd]{" + std::to_string(szer) + "}$";
+        std::regex wzorMapy(regula);
+
+        for (int y = 0; y < wys; ++y) {
+            if (!std::getline(plik, linia)) return false;
+
+            if (!std::regex_match(linia, wzorMapy)) {
+                return false;
+            }
+
+            for (int x = 0; x < szer; ++x) {
+                char znak = linia[x];
+                switch (znak) {
+                case '.': silnik.postawObiekt(x, y, std::make_unique<Trawa>()); break;
+                case '#': silnik.postawObiekt(x, y, std::make_unique<Sciana>()); break;
+                case '~': silnik.postawObiekt(x, y, std::make_unique<Woda>()); break;
+                case ',': silnik.postawObiekt(x, y, std::make_unique<Ziemia>()); break;
+                case '=': silnik.postawObiekt(x, y, std::make_unique<KamiennaPodloga>()); break;
+                case 'D':
+                case 'd': {
+                    auto drzwi = std::make_unique<Drzwi>();
+                    if (znak == 'd') {
+                        drzwi->zmienStan();
+                    }
+                    silnik.postawObiekt(x, y, std::move(drzwi));
+                    break;
+                }
+                default: break;
+                }
             }
         }
-        return ' ';
-    }
 
-    void zmienRozmiar(int nowaSzerokosc, int nowaWysokosc) {
-        std::lock_guard<std::mutex> lock(mutexSiatki);
-        szerokosc = nowaSzerokosc;
-        wysokosc = nowaWysokosc;
-        siatka.clear();
-        siatka.resize(szerokosc);
-        for (int x = 0; x < szerokosc; ++x) {
-            siatka[x].resize(wysokosc);
-        }
-    }
-
-    int policzObiektyKategorii(Kategoria szukanaKat) {
-        std::lock_guard<std::mutex> lock(mutexSiatki);
-        auto przefiltrowanyWidok = siatka
-            | std::views::join
-            | std::views::filter([szukanaKat](const std::unique_ptr<ObiektMapy>& obiekt) {
-            return obiekt != nullptr && obiekt->pobierzKategorie() == szukanaKat;
-                });
-        return std::ranges::distance(przefiltrowanyWidok);
-    }
-
-    void przejmijDane(ZarzadcaMapy& inne) {
-        std::lock_guard<std::mutex> lock(mutexSiatki); 
-
-        this->szerokosc = inne.szerokosc;
-        this->wysokosc = inne.wysokosc;
-        this->siatka = std::move(inne.siatka); 
-        this->aktualnaNazwaMapy = std::move(inne.aktualnaNazwaMapy);
-        this->aktualnyPedzel = inne.aktualnyPedzel;
-    }
-
-    void ustawPedzel(TypPedzla typ) { aktualnyPedzel = typ; }
-    TypPedzla pobierzPedzel() const { return aktualnyPedzel; }
-
-    const std::vector<std::vector<std::unique_ptr<ObiektMapy>>>& pobierzSiatke() const {
-        return siatka;
-    }
-
-    bool przelaczStanDrzwi(int x, int y) {
-        std::lock_guard<std::mutex> lock(mutexSiatki);
-        if (x >= 0 && x < szerokosc && y >= 0 && y < wysokosc) {
-            if (Drzwi* drzwi = dynamic_cast<Drzwi*>(siatka[x][y].get())) {
-                drzwi->zmienStan(); 
-                return true;        
-            }
-        }
-        return false; 
+        return true;
     }
 };
