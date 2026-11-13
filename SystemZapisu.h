@@ -13,8 +13,12 @@ namespace fs = std::filesystem;
 
 class SystemZapisu {
 public:
-    static bool zapiszDoPliku(const std::string& nazwaMapy, int szerokosc, int wysokosc, const std::vector<std::vector<std::unique_ptr<ObiektMapy>>>& siatka) {
-
+    static bool zapiszDoPliku(
+        const std::string& nazwaMapy,
+        int szerokosc,
+        int wysokosc,
+        const std::vector<std::unique_ptr<ObiektMapy>>& siatka)
+    {
         fs::path folderGlowny = "ZapisaneMapy";
 
         if (!fs::exists(folderGlowny)) {
@@ -33,17 +37,17 @@ public:
 
         for (int y = 0; y < wysokosc; ++y) {
             for (int x = 0; x < szerokosc; ++x) {
-                if (x < siatka.size() && y < siatka[x].size() && siatka[x][y] != nullptr) {
-                    plik << siatka[x][y]->pobierzSymbol();
+                size_t idx = static_cast<size_t>(y) * static_cast<size_t>(szerokosc) + static_cast<size_t>(x);
+                if (idx < siatka.size() && siatka[idx] != nullptr) {
+                    plik << siatka[idx]->pobierzSymbol();
                 }
                 else {
-                    plik << '.'; 
+                    plik << '.';
                 }
             }
             plik << "\n";
         }
 
-        plik.close();
         return true;
     }
 
@@ -53,8 +57,8 @@ public:
 
         std::string linia;
 
-        if (!std::getline(plik, linia)) return false; 
-        if (!std::getline(plik, linia)) return false; 
+        if (!std::getline(plik, linia)) return false;
+        if (!std::getline(plik, linia)) return false;
 
         std::regex wzorWymiarow(R"(Wymiary:\s*(\d+)\s+(\d+))");
         std::smatch dopasowanie;
@@ -66,7 +70,7 @@ public:
                 wys = std::stoi(dopasowanie[2].str());
             }
             catch (const std::exception&) {
-                return false; 
+                return false;
             }
         }
         else {
@@ -91,32 +95,26 @@ public:
 
             for (int x = 0; x < szer; ++x) {
                 char znak = linia[x];
-                if (znak == '.') {
-                    silnik.postawObiekt(x, y, std::make_unique<Trawa>());
-                }
-                else if (znak == '#') {
-                    silnik.postawObiekt(x, y, std::make_unique<Sciana>());
-                }
-                else if (znak == '~') {
-                    silnik.postawObiekt(x, y, std::make_unique<Woda>());
-                }
-                else if (znak == ',') {
-                    silnik.postawObiekt(x, y, std::make_unique<Ziemia>());
-                }
-                else if (znak == '=') {
-                    silnik.postawObiekt(x, y, std::make_unique<KamiennaPodloga>());
-                }
-                else if (znak == 'D' || znak == 'd') {
+                switch (znak) {
+                case '.': silnik.postawObiekt(x, y, std::make_unique<Trawa>()); break;
+                case '#': silnik.postawObiekt(x, y, std::make_unique<Sciana>()); break;
+                case '~': silnik.postawObiekt(x, y, std::make_unique<Woda>()); break;
+                case ',': silnik.postawObiekt(x, y, std::make_unique<Ziemia>()); break;
+                case '=': silnik.postawObiekt(x, y, std::make_unique<KamiennaPodloga>()); break;
+                case 'D':
+                case 'd': {
                     auto drzwi = std::make_unique<Drzwi>();
                     if (znak == 'd') {
                         drzwi->zmienStan();
                     }
                     silnik.postawObiekt(x, y, std::move(drzwi));
+                    break;
+                }
+                default: break;
                 }
             }
         }
 
-        plik.close();
         return true;
     }
 };

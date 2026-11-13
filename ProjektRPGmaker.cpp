@@ -1,6 +1,5 @@
 #include "ProjektRPGmaker.h"
-#include <QGraphicsRectItem>
-#include <QBrush>
+#include <QMessageBox>
 #include <QGraphicsSceneMouseEvent>
 #include <QPixmap>
 #include <QHBoxLayout>
@@ -10,18 +9,15 @@
 #include <QPushButton>
 #include <QTime>
 #include <QTimer>
-#include <QDebug>
 #include <QFontDatabase>
 #include <QFont>
 #include <QWidget>
-#include <QInputDialog>
+#include <regex>
 
 #include "SystemZapisu.h"
 #include "WczytajProjektDialog.h"
 #include "ZapiszProjektDialog.h"
 #include "StatystykiDialog.h"
-
-#include <regex>
 
 void ProjektRPGmaker::mousePressEvent(QMouseEvent* event) {
     if (event->button() == Qt::LeftButton) {
@@ -37,57 +33,89 @@ void ProjektRPGmaker::mouseMoveEvent(QMouseEvent* event) {
     }
 }
 
+// Kafelek UI jest teraz czystym kontrolerem zdarzeñ myszy (zgodnie z MVC)
 class KlikalnyKwadrat : public QGraphicsRectItem {
 private:
     int gridX, gridY;
     ZarzadcaMapy* silnik;
 
 public:
-    KlikalnyKwadrat(int x, int y, int rozmiar, ZarzadcaMapy* s) : QGraphicsRectItem(x* rozmiar, y* rozmiar, rozmiar, rozmiar), gridX(x), gridY(y), silnik(s) {}
+    KlikalnyKwadrat(int x, int y, int rozmiar, ZarzadcaMapy* s)
+        : QGraphicsRectItem(x* rozmiar, y* rozmiar, rozmiar, rozmiar),
+        gridX(x), gridY(y), silnik(s) {
+    }
 
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override {
-        if (silnik->pobierzPedzel() == TypPedzla::Trawa) {
-            silnik->postawObiekt(gridX, gridY, std::make_unique<Trawa>());
-            this->setBrush(QBrush(QPixmap(":/sprites/trawa.png")));
-        }
-        else if (silnik->pobierzPedzel() == TypPedzla::Sciana) {
-            silnik->postawObiekt(gridX, gridY, std::make_unique<Sciana>());
-            this->setBrush(QBrush(QPixmap(":/sprites/sciana.png")));
-        }
-        else if (silnik->pobierzPedzel() == TypPedzla::Woda) {
-            silnik->postawObiekt(gridX, gridY, std::make_unique<Woda>());
-            this->setBrush(QBrush(QPixmap(":/sprites/woda.png")));
-        }
-        else if (silnik->pobierzPedzel() == TypPedzla::Ziemia) {
-            silnik->postawObiekt(gridX, gridY, std::make_unique<Ziemia>());
-            this->setBrush(QBrush(QPixmap(":/sprites/ziemia.png")));
-        }
-        else if (silnik->pobierzPedzel() == TypPedzla::Chodnik) {
-            silnik->postawObiekt(gridX, gridY, std::make_unique<KamiennaPodloga>());
-            this->setBrush(QBrush(QPixmap(":/sprites/sciezka-good.png")));
-        }
-        else if (silnik->pobierzPedzel() == TypPedzla::Drzwi) {
-            silnik->postawObiekt(gridX, gridY, std::make_unique<Drzwi>());
-            this->setBrush(QBrush(QPixmap(":/sprites/drzwi.png")));
+        if (event->button() == Qt::LeftButton) {
+            silnik->namalujAktualnymPedzlem(gridX, gridY);
+            event->accept();
         }
     }
 
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override {
         if (event->button() == Qt::LeftButton) {
-            if (silnik->przelaczStanDrzwi(gridX, gridY)) {
-                char nowySymbol = silnik->pobierzSymbolZMapy(gridX, gridY);
-
-                if (nowySymbol == 'd') {
-                    this->setBrush(QBrush(QPixmap(":/sprites/drzwi-otwarte.png")));
-                }
-                else if (nowySymbol == 'D') {
-                    this->setBrush(QBrush(QPixmap(":/sprites/drzwi.png")));
-                }
-            }
+            silnik->przelaczStanDrzwi(gridX, gridY);
             event->accept();
         }
     }
 };
+
+void ProjektRPGmaker::inicjalizujSlownikTekstur() {
+    auto wczytajTeksture = [](const QString& sciezka) -> QBrush {
+        return QBrush(QPixmap(sciezka).scaled(
+            ROZMIAR_KRATKI, ROZMIAR_KRATKI,
+            Qt::IgnoreAspectRatio, Qt::FastTransformation));
+        };
+
+    slownikTekstur["Trawa"] = wczytajTeksture(":/sprites/trawa.png");
+    slownikTekstur["Sciana"] = wczytajTeksture(":/sprites/sciana.png");
+    slownikTekstur["Woda"] = wczytajTeksture(":/sprites/woda.png");
+    slownikTekstur["Ziemia"] = wczytajTeksture(":/sprites/ziemia.png");
+    slownikTekstur["KamiennaPodloga"] = wczytajTeksture(":/sprites/sciezka-good.png");
+    slownikTekstur["Drzwi"] = wczytajTeksture(":/sprites/drzwi.png");
+    slownikTekstur["DrzwiOtwarte"] = wczytajTeksture(":/sprites/drzwi-otwarte.png");
+}
+
+void ProjektRPGmaker::odswiezKafelekWidoku(int x, int y, const std::string& nazwaObiektu) {
+    int szer = edytor.pobierzSzerokosc();
+    int wys = edytor.pobierzWysokosc();
+    if (x < 0 || x >= szer || y < 0 || y >= wys) return;
+
+    size_t idx = static_cast<size_t>(y) * static_cast<size_t>(szer) + static_cast<size_t>(x);
+    if (idx < kafelkiWidoku.size() && kafelkiWidoku[idx] != nullptr) {
+        auto it = slownikTekstur.find(nazwaObiektu);
+        if (it != slownikTekstur.end()) {
+            kafelkiWidoku[idx]->setBrush(it->second);
+        }
+    }
+}
+
+void ProjektRPGmaker::przebudujScene() {
+    scena->clear();
+    int szer = edytor.pobierzSzerokosc();
+    int wys = edytor.pobierzWysokosc();
+
+    kafelkiWidoku.assign(static_cast<size_t>(szer) * static_cast<size_t>(wys), nullptr);
+
+    for (int y = 0; y < wys; ++y) {
+        for (int x = 0; x < szer; ++x) {
+            KlikalnyKwadrat* kwadrat = new KlikalnyKwadrat(x, y, ROZMIAR_KRATKI, &edytor);
+            scena->addItem(kwadrat);
+
+            size_t idx = static_cast<size_t>(y) * static_cast<size_t>(szer) + static_cast<size_t>(x);
+            kafelkiWidoku[idx] = kwadrat;
+
+            std::string nazwa = edytor.pobierzNazweZMapy(x, y);
+            odswiezKafelekWidoku(x, y, nazwa);
+        }
+    }
+
+    scena->setSceneRect(0, 0, szer * ROZMIAR_KRATKI, wys * ROZMIAR_KRATKI);
+    widok->resetTransform();
+    QTimer::singleShot(50, this, [this]() {
+        widok->fitInView(scena->sceneRect(), Qt::KeepAspectRatio);
+        });
+}
 
 bool ProjektRPGmaker::wczytajKonkretnyProjekt(const std::string& nazwa) {
     namespace fs = std::filesystem;
@@ -96,38 +124,14 @@ bool ProjektRPGmaker::wczytajKonkretnyProjekt(const std::string& nazwa) {
     ZarzadcaMapy tempEdytor;
 
     if (!SystemZapisu::wczytajZPliku(pelnaSciezka.string(), tempEdytor)) {
-        return false; 
+        return false;
     }
 
     edytor.przejmijDane(tempEdytor);
     edytor.ustawNazweMapy(nazwa);
 
-    scena->clear();
-
-    int rozmiarKratki = 32;
-    for (int x = 0; x < edytor.pobierzSzerokosc(); ++x) {
-        for (int y = 0; y < edytor.pobierzWysokosc(); ++y) {
-            KlikalnyKwadrat* kwadrat = new KlikalnyKwadrat(x, y, rozmiarKratki, &edytor);
-            scena->addItem(kwadrat);
-
-            char symbol = edytor.pobierzSymbolZMapy(x, y);
-            if (symbol == '.') kwadrat->setBrush(QBrush(QPixmap(":/sprites/trawa.png")));
-            else if (symbol == '#') kwadrat->setBrush(QBrush(QPixmap(":/sprites/sciana.png")));
-            else if (symbol == '~') kwadrat->setBrush(QBrush(QPixmap(":/sprites/woda.png")));
-            else if (symbol == ',') kwadrat->setBrush(QBrush(QPixmap(":/sprites/ziemia.png")));
-            else if (symbol == '=') kwadrat->setBrush(QBrush(QPixmap(":/sprites/sciezka-good.png")));
-            else if (symbol == 'D') kwadrat->setBrush(QBrush(QPixmap(":/sprites/drzwi.png")));
-            else if (symbol == 'd') kwadrat->setBrush(QBrush(QPixmap(":/sprites/drzwi-otwarte.png")));
-        }
-    }
-
-    scena->setSceneRect(0, 0, edytor.pobierzSzerokosc() * rozmiarKratki, edytor.pobierzWysokosc() * rozmiarKratki);
-    widok->resetTransform();
-    QTimer::singleShot(50, this, [this]() {
-        widok->fitInView(scena->sceneRect(), Qt::KeepAspectRatio);
-        });
-
-    return true; 
+    przebudujScene();
+    return true;
 }
 
 void ProjektRPGmaker::wczytajProjekt() {
@@ -153,18 +157,18 @@ void ProjektRPGmaker::wczytajProjekt() {
 
     if (dialog.exec() == QDialog::Accepted) {
         QString wybranaMapa = dialog.getWybranaMapa();
-
-        wczytajKonkretnyProjekt(wybranaMapa.toStdString());
-
-        labelOstatniZapis->setText(QString::fromStdString("ostatni zapis: " + wybranaMapa.toStdString()));
+        if (wczytajKonkretnyProjekt(wybranaMapa.toStdString())) {
+            labelOstatniZapis->setText("ostatni zapis: " + wybranaMapa);
+        }
     }
 }
 
 ProjektRPGmaker::ProjektRPGmaker(QWidget* parent) : QMainWindow(parent) {
-
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
-    this->showMaximized(); 
+    this->showMaximized();
+
+    inicjalizujSlownikTekstur();
 
     int fontId = QFontDatabase::addApplicationFont(":/css/pixel.ttf");
     QString fontName = "Arial";
@@ -306,7 +310,6 @@ ProjektRPGmaker::ProjektRPGmaker(QWidget* parent) : QMainWindow(parent) {
 
         if (dialog.exec() == QDialog::Accepted) {
             QString nazwa = dialog.getNazwa();
-
             if (nazwa.isEmpty()) return;
 
             std::string czystaNazwa = std::regex_replace(nazwa.toStdString(), std::regex(" "), "_");
@@ -314,7 +317,8 @@ ProjektRPGmaker::ProjektRPGmaker(QWidget* parent) : QMainWindow(parent) {
 
             if (czystaNazwa.empty()) czystaNazwa = "Mapa_Domyslna";
 
-            bool sukces = SystemZapisu::zapiszDoPliku(czystaNazwa, edytor.pobierzSzerokosc(), edytor.pobierzWysokosc(), edytor.pobierzSiatke());
+            bool sukces = SystemZapisu::zapiszDoPliku(
+                czystaNazwa, edytor.pobierzSzerokosc(), edytor.pobierzWysokosc(), edytor.pobierzSiatke());
 
             if (sukces) {
                 edytor.ustawNazweMapy(czystaNazwa);
@@ -326,79 +330,58 @@ ProjektRPGmaker::ProjektRPGmaker(QWidget* parent) : QMainWindow(parent) {
         }
         });
 
-    int rozmiarKratki = 40;
-    for (int x = 0; x < edytor.pobierzSzerokosc(); ++x) {
-        for (int y = 0; y < edytor.pobierzWysokosc(); ++y) {
-            KlikalnyKwadrat* kwadrat = new KlikalnyKwadrat(x, y, rozmiarKratki, &edytor);
-            scena->addItem(kwadrat);
+    // Podpiêcie wzorca Observer (MVC): ka¿da zmiana w modelu automatycznie odœwie¿a kafelek w UI
+    edytor.ustawObserwatoraMapy([this](int x, int y, const std::string& nazwaObiektu) {
+        odswiezKafelekWidoku(x, y, nazwaObiektu);
+        });
 
-            char symbol = edytor.pobierzSymbolZMapy(x, y);
-            if (symbol == '.') kwadrat->setBrush(QBrush(QPixmap(":/sprites/trawa.png").scaled(rozmiarKratki, rozmiarKratki, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
-            else if (symbol == '#') kwadrat->setBrush(QBrush(QPixmap(":/sprites/sciana.png").scaled(rozmiarKratki, rozmiarKratki, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
-            else if (symbol == '~') kwadrat->setBrush(QBrush(QPixmap(":/sprites/woda.png").scaled(rozmiarKratki, rozmiarKratki, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
-            else if (symbol == ',') kwadrat->setBrush(QBrush(QPixmap(":/sprites/ziemia.png").scaled(rozmiarKratki, rozmiarKratki, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
-            else if (symbol == '=') kwadrat->setBrush(QBrush(QPixmap(":/sprites/sciezka-good.png").scaled(rozmiarKratki, rozmiarKratki, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
-            else if (symbol == 'D') kwadrat->setBrush(QBrush(QPixmap(":/sprites/drzwi.png").scaled(rozmiarKratki, rozmiarKratki, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
-            else if (symbol == 'd') kwadrat->setBrush(QBrush(QPixmap(":/sprites/drzwi-otwarte.png").scaled(rozmiarKratki, rozmiarKratki, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
-        }
-    }
+    edytor.ustawAkcjePoAutozapisie([this]() {
+        QMetaObject::invokeMethod(this, [this]() {
+            QString czasFormatowany = QTime::currentTime().toString("HH:mm:ss");
+            labelOstatniZapis->setText("ostatni autozapis: " + czasFormatowany);
+            });
+        });
+
+    przebudujScene();
 
     QString stylEdytora = R"(
-        /* Górny i dolny pasek - Fioletowo/Niebieskie (Zast¹p swoim gradientem) */
         QWidget#ramkaGornaEdytora, QWidget#ramkaDolnaEdytora {
             background-color: #5C61FF; 
         }
-        
-        /* Zaokr¹glone górne rogi okna dla paska */
         QWidget#glownyKontenerEdytora {
             background-color: transparent;
             border: 2px solid #5C61FF;
         }
-
-        /* Lewy panel boczny z t³em (Wpisz nazwê w³asnego t³a) */
         QWidget#panelBoczny {
             background-image: url(:/css/tlo-podprogramy.png);
             background-repeat: repeat;
             background-position: top left;
         }
-        
-        /* T³o obszaru mapy (Zostaje domyœlnie ciemne jak pod³o¿e w Unity/Godocie) */
         QGraphicsView#widokMapy {
             background-color: #1e1e1e;
         }
-
         QLabel#tytulBialy {
             color: white;
         }
-
-        /* --- MAGIA! ZAMIANA QRadioButton w PUSTE KWADRATY (Checkboxy) --- */
         QRadioButton {
             color: white;
-            spacing: 8px; /* Odstêp miêdzy polem a napisem */
+            spacing: 8px;
         }
-        
-        /* Kwadracik z bia³¹ ramk¹ (Pusty przed zaznaczeniem) */
         QRadioButton::indicator {
             width: 14px;
             height: 14px;
             border: 2px solid white;
             background-color: transparent;
         }
-
-        /* Wype³nienie kwadracika na bia³o, kiedy jest aktywny (jak zaznaczony Checkbox) */
         QRadioButton::indicator:checked {
             background-color: white;
         }
-
-        /* Przyciski w lewym panelu (Statystyki) */
         QPushButton#btnStatystyki {
             color: white;
             text-align: left;
             background: transparent;
             border: none;
         }
-
-        /* Przyciski tekstowe u góry (ZAPISZ, WCZYTAJ, X) */
         QPushButton#btnZapiszTop, QPushButton#btnWczytajTop, QPushButton#btnCancelX {
             color: white;
             background: transparent;
@@ -408,65 +391,35 @@ ProjektRPGmaker::ProjektRPGmaker(QWidget* parent) : QMainWindow(parent) {
             color: #EAA5F5;
         }
         QPushButton#btnCancelX:hover {
-            background-color: #ef4444; /* Czerwony X po klikniêciu */
+            background-color: #ef4444;
         }
     )";
 
     this->setStyleSheet(stylEdytora);
-    edytor.ustawAkcjePoAutozapisie([this]() {
-        QMetaObject::invokeMethod(this, [this]() {
-            QString czasFormatowany = QTime::currentTime().toString("HH:mm:ss");
-            labelOstatniZapis->setText("ostatni autozapis: " + czasFormatowany);
-            });
-        });
 }
 
 void ProjektRPGmaker::stworzNowyProjekt(std::string nazwa, int szer, int wys, QString wypelnienie) {
+    // Tymczasowo odpinamy obserwatora na czas masowego wype³niania nowej mapy
+    edytor.ustawObserwatoraMapy(nullptr);
+
     edytor.zmienRozmiar(szer, wys);
     edytor.ustawNazweMapy(nazwa);
 
-    for (int x = 0; x < szer; ++x) {
-        for (int y = 0; y < wys; ++y) {
-            if (wypelnienie == "Woda") {
-                edytor.postawObiekt(x, y, std::make_unique<Woda>());
-            }
-            else if (wypelnienie == "Ziemia") {
-                edytor.postawObiekt(x, y, std::make_unique<Ziemia>());
-            }
-            else if (wypelnienie == "Chodnik") {
-                edytor.postawObiekt(x, y, std::make_unique<KamiennaPodloga>());
-            }
-            else if (wypelnienie == "Sciana") {
-                edytor.postawObiekt(x, y, std::make_unique<Sciana>());
-            }
-            else {
-                edytor.postawObiekt(x, y, std::make_unique<Trawa>());
-            }
+    for (int y = 0; y < wys; ++y) {
+        for (int x = 0; x < szer; ++x) {
+            if (wypelnienie == "Woda")         edytor.postawObiekt(x, y, std::make_unique<Woda>());
+            else if (wypelnienie == "Ziemia")  edytor.postawObiekt(x, y, std::make_unique<Ziemia>());
+            else if (wypelnienie == "Chodnik") edytor.postawObiekt(x, y, std::make_unique<KamiennaPodloga>());
+            else if (wypelnienie == "Sciana")  edytor.postawObiekt(x, y, std::make_unique<Sciana>());
+            else                               edytor.postawObiekt(x, y, std::make_unique<Trawa>());
         }
     }
 
-    scena->clear();
-    int rozmiarKratki = 32; 
-    for (int x = 0; x < edytor.pobierzSzerokosc(); ++x) {
-        for (int y = 0; y < edytor.pobierzWysokosc(); ++y) {
-            KlikalnyKwadrat* kwadrat = new KlikalnyKwadrat(x, y, rozmiarKratki, &edytor);
-            scena->addItem(kwadrat);
+    przebudujScene();
 
-            char symbol = edytor.pobierzSymbolZMapy(x, y);
-            if (symbol == '.') kwadrat->setBrush(QBrush(QPixmap(":/sprites/trawa.png")));
-            else if (symbol == '#') kwadrat->setBrush(QBrush(QPixmap(":/sprites/sciana.png")));
-            else if (symbol == '~') kwadrat->setBrush(QBrush(QPixmap(":/sprites/woda.png")));
-            else if (symbol == ',') kwadrat->setBrush(QBrush(QPixmap(":/sprites/ziemia.png")));
-            else if (symbol == '=') kwadrat->setBrush(QBrush(QPixmap(":/sprites/sciezka-good.png")));
-            else if (symbol == 'D') kwadrat->setBrush(QBrush(QPixmap(":/sprites/drzwi.png")));
-            else if (symbol == 'd') kwadrat->setBrush(QBrush(QPixmap(":/sprites/drzwi-otwarte.png")));
-        }
-    }
-
-    scena->setSceneRect(0, 0, edytor.pobierzSzerokosc() * rozmiarKratki, edytor.pobierzWysokosc() * rozmiarKratki);
-    widok->resetTransform();
-    QTimer::singleShot(50, this, [this]() {
-        widok->fitInView(scena->sceneRect(), Qt::KeepAspectRatio);
+    // Ponownie podpinamy obserwatora po zbudowaniu sceny
+    edytor.ustawObserwatoraMapy([this](int x, int y, const std::string& nazwaObiektu) {
+        odswiezKafelekWidoku(x, y, nazwaObiektu);
         });
 }
 

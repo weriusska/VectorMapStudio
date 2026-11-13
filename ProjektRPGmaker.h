@@ -2,9 +2,14 @@
 #include <QtWidgets/QMainWindow>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QGraphicsRectItem>
 #include <QMouseEvent>
 #include <QPoint>
 #include <QLabel>
+#include <QBrush>
+#include <unordered_map>
+#include <vector>
+#include <string>
 #include "Zarzadca.h"
 
 class ProjektRPGmaker : public QMainWindow {
@@ -23,11 +28,22 @@ protected:
     void mouseMoveEvent(QMouseEvent* event) override;
 
 private:
+    static constexpr int ROZMIAR_KRATKI = 32;
 
     QGraphicsScene* scena;
     QGraphicsView* widok;
     ZarzadcaMapy edytor{ 20, 20 };
 
+    // S³ownik tekstur wczytanych do RAM (NazwaObiektu -> QBrush)
+    std::unordered_map<std::string, QBrush> slownikTekstur;
+
+    // P³aski wektor 1D przechowuj¹cy elementy graficzne sceny dla dostêpu O(1)
+    std::vector<QGraphicsRectItem*> kafelkiWidoku;
+
     QPoint pozycjaMyszy;
-    QLabel* labelOstatniZapis; 
+    QLabel* labelOstatniZapis;
+
+    void inicjalizujSlownikTekstur();
+    void przebudujScene();
+    void odswiezKafelekWidoku(int x, int y, const std::string& nazwaObiektu);
 };

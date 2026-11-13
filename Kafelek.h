@@ -9,7 +9,6 @@ public:
     char pobierzSymbol() const override { return '.'; }
 };
 
-
 class Sciana : public ObiektMapy {
 public:
     Sciana() : ObiektMapy(Kategoria::Infrastruktura) {}
@@ -44,16 +43,16 @@ public:
 
 class Drzwi : public ObiektMapy {
 private:
-    bool otwarte = false; 
+    bool otwarte = false;
 public:
     Drzwi() : ObiektMapy(Kategoria::Infrastruktura) {}
-    std::string pobierzNazwe() const override { return "Drzwi"; }
 
-    // Zwraca true jeœli otwarte, false jeœli zamkniête 
+    std::string pobierzNazwe() const override {
+        return otwarte ? "DrzwiOtwarte" : "Drzwi";
+    }
+
     bool czyMoznaWejsc() const override { return otwarte; }
-
-    // Zwraca ma³e 'd' dla otwartych i du¿e 'D' dla zamkniêtych
     char pobierzSymbol() const override { return otwarte ? 'd' : 'D'; }
 
-    void zmienStan() { otwarte = !otwarte; }
+    void zmienStan() noexcept { otwarte = !otwarte; }
 };
