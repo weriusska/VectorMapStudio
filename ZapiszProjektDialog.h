@@ -104,62 +104,7 @@ public:
         formularzLayout->addSpacing(30);
         formularzLayout->addWidget(btnZapisz, 0, Qt::AlignCenter);
 
-        QString stylDialogu = R"(
-            QWidget#ramkaPaskaDialog {
-                background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, 
-                                            stop: 0 #5C61FF, stop: 1 #7F83FF);
-                border-top-left-radius: 15px;
-                border-top-right-radius: 15px;
-                border-bottom: 3px solid white;
-            }
-            QLabel#tytulDialog {
-                color: white; background-color: transparent; border: 2px solid white; 
-                border-radius: 6px; padding: 3px 12px;
-            }
-            QPushButton#btnCancelX {
-                color: white; background-color: transparent; border: none; font-size: 14pt;
-            }
-            QPushButton#btnCancelX:hover {
-                background-color: #ef4444; color: white; border-radius: 4px;
-            }
-            QPushButton#btnCancelX:pressed { background-color: #b91c1c; }
-
-            /* --- PODMIENIONA ŒCIE¯KA DO T£A --- */
-            QWidget#formularzWidget {
-                border-image: url(:/css/tlo-podprogramy.png) 0 0 0 0 stretch stretch;
-                border-bottom-left-radius: 15px;
-                border-bottom-right-radius: 15px;
-                border-top: none;
-            }
-
-            QLabel { color: white; }
-
-            QLineEdit {
-                background-color: rgba(255, 255, 255, 0.7);
-                border: 2px solid white;
-                border-radius: 10px;
-                padding: 5px;
-                color: #3e285a;
-            }
-            QLineEdit:focus { background-color: white; }
-
-            QPushButton#btnGotowe {
-                background-color: rgba(255, 255, 255, 0.3);
-                border: 3px solid white;
-                border-radius: 15px;
-                color: white;
-            }
-            QPushButton#btnGotowe:hover {
-                background-color: rgba(255, 255, 255, 0.6);
-                border: 3px solid #FAFAFA;
-            }
-            QPushButton#btnGotowe:pressed {
-                background-color: rgba(255, 255, 255, 0.8);
-                padding-top: 5px;
-            }
-        )";
-
-        this->setStyleSheet(stylDialogu);
+       
     }
 
     QString getNazwa() const { return editNazwa->text(); }

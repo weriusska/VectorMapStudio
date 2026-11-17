@@ -1,5 +1,6 @@
 #include "ProjektRPGmaker.h"
 #include <QMessageBox>
+#include <QMessageBox>
 #include <QGraphicsSceneMouseEvent>
 #include <QPixmap>
 #include <QHBoxLayout>
@@ -344,58 +345,7 @@ ProjektRPGmaker::ProjektRPGmaker(QWidget* parent) : QMainWindow(parent) {
 
     przebudujScene();
 
-    QString stylEdytora = R"(
-        QWidget#ramkaGornaEdytora, QWidget#ramkaDolnaEdytora {
-            background-color: #5C61FF; 
-        }
-        QWidget#glownyKontenerEdytora {
-            background-color: transparent;
-            border: 2px solid #5C61FF;
-        }
-        QWidget#panelBoczny {
-            background-image: url(:/css/tlo-podprogramy.png);
-            background-repeat: repeat;
-            background-position: top left;
-        }
-        QGraphicsView#widokMapy {
-            background-color: #1e1e1e;
-        }
-        QLabel#tytulBialy {
-            color: white;
-        }
-        QRadioButton {
-            color: white;
-            spacing: 8px;
-        }
-        QRadioButton::indicator {
-            width: 14px;
-            height: 14px;
-            border: 2px solid white;
-            background-color: transparent;
-        }
-        QRadioButton::indicator:checked {
-            background-color: white;
-        }
-        QPushButton#btnStatystyki {
-            color: white;
-            text-align: left;
-            background: transparent;
-            border: none;
-        }
-        QPushButton#btnZapiszTop, QPushButton#btnWczytajTop, QPushButton#btnCancelX {
-            color: white;
-            background: transparent;
-            border: none;
-        }
-        QPushButton#btnZapiszTop:hover, QPushButton#btnWczytajTop:hover {
-            color: #EAA5F5;
-        }
-        QPushButton#btnCancelX:hover {
-            background-color: #ef4444;
-        }
-    )";
-
-    this->setStyleSheet(stylEdytora);
+  
 }
 
 void ProjektRPGmaker::stworzNowyProjekt(std::string nazwa, int szer, int wys, QString wypelnienie) {

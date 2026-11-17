@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>css/styl.qss</file>
         <file>css/tlo-podprogramy.png</file>
         <file>css/pixel.ttf</file>
         <file>css/tlo.png</file>

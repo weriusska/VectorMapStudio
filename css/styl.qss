@@ -1,0 +1,184 @@
+/* =========================================================
+   1. MENU GŁÓWNE (MenuGlowne)
+   ========================================================= */
+QMainWindow#MojeMenu {
+    border-image: url(:/css/tlo.png) 0 0 0 0 stretch stretch;
+}
+
+QWidget#ramkaPaska {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #5C61FF, stop: 1 #7F83FF);
+    border-bottom: 3px solid white;
+}
+
+QLabel#tytulApp {
+    color: white;
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: 6px;
+    padding: 3px 12px;
+}
+
+QPushButton#btnX {
+    color: white;
+    background-color: transparent;
+    border: none;
+    font-size: 14pt;
+}
+
+QPushButton#btnX:hover {
+    background-color: #ef4444;
+    border-radius: 4px;
+}
+
+QPushButton#btnX:pressed {
+    background-color: #b91c1c;
+}
+
+QPushButton#btnMenuGlowne {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #EAA5F5, stop: 1 #A4B2F8);
+    border: 4px solid white;
+    border-radius: 15px;
+    color: white;
+}
+
+QPushButton#btnMenuGlowne:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #F5B9FF, stop: 1 #BBC5FF);
+    border: 4px solid #FAFAFA;
+}
+
+QPushButton#btnMenuGlowne:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #D18CEB, stop: 1 #8E9CE8);
+    padding-top: 5px;
+}
+
+/* =========================================================
+   2. GŁÓWNY EDYTOR MAP (ProjektRPGmaker)
+   ========================================================= */
+QWidget#ramkaGornaEdytora, QWidget#ramkaDolnaEdytora {
+    background-color: #5C61FF;
+}
+
+QWidget#glownyKontenerEdytora {
+    background-color: transparent;
+    border: 2px solid #5C61FF;
+}
+
+QWidget#panelBoczny {
+    background-image: url(:/css/tlo-podprogramy.png);
+    background-repeat: repeat;
+    background-position: top left;
+}
+
+QGraphicsView#widokMapy {
+    background-color: #1e1e1e;
+}
+
+QLabel#tytulBialy {
+    color: white;
+}
+
+QRadioButton {
+    color: white;
+    spacing: 8px;
+}
+
+QRadioButton::indicator {
+    width: 14px;
+    height: 14px;
+    border: 2px solid white;
+    background-color: transparent;
+}
+
+QRadioButton::indicator:checked {
+    background-color: white;
+}
+
+QPushButton#btnStatystyki {
+    color: white;
+    text-align: left;
+    background: transparent;
+    border: none;
+}
+
+QPushButton#btnZapiszTop, QPushButton#btnWczytajTop, QPushButton#btnCancelX {
+    color: white;
+    background: transparent;
+    border: none;
+}
+
+QPushButton#btnZapiszTop:hover, QPushButton#btnWczytajTop:hover {
+    color: #EAA5F5;
+}
+
+QPushButton#btnCancelX:hover {
+    background-color: #ef4444;
+    color: white;
+    border-radius: 4px;
+}
+
+QPushButton#btnCancelX:pressed {
+    background-color: #b91c1c;
+}
+
+/* =========================================================
+   3. OKNA DIALOGOWE (Nowy, Wczytaj, Zapisz, Statystyki)
+   ========================================================= */
+QWidget#ramkaPaskaDialog {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                                stop: 0 #5C61FF, stop: 1 #7F83FF);
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom: 3px solid white;
+}
+
+QLabel#tytulDialog {
+    color: white;
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: 6px;
+    padding: 3px 12px;
+}
+
+QWidget#formularzWidget {
+    border-image: url(:/css/tlo-podprogramy.png) 0 0 0 0 stretch stretch;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    border-top: none;
+}
+
+QDialog QLabel {
+    color: white;
+}
+
+QDialog QLineEdit, QDialog QComboBox {
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 2px solid white;
+    border-radius: 10px;
+    padding: 5px 15px;
+    color: #3e285a;
+}
+
+QDialog QLineEdit:focus, QDialog QComboBox:focus {
+    background-color: white;
+}
+
+QPushButton#btnGotowe {
+    background-color: rgba(255, 255, 255, 0.3);
+    border: 3px solid white;
+    border-radius: 15px;
+    color: white;
+}
+
+QPushButton#btnGotowe:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+    border: 3px solid #FAFAFA;
+}
+
+QPushButton#btnGotowe:pressed {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding-top: 5px;
+}
